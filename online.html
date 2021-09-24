@@ -1,0 +1,198 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300&display=swap" rel="stylesheet">
+
+
+
+
+
+<div class="cantainer1">
+
+<!-- start left bar -->
+<div class="left-bar" style="text-align:center;">
+</br></br>
+<span><i class="fa fa-bell" style="color: #d8dce3;font-size:40px;"></i></span></br>
+<span  > <i class="fa fa-ellipsis-h" style="color: #d8dce3;font-size:30px;""></i> </span>
+
+
+<span  style="position:absolute;bottom:110px;left:2.8%;text-align:center;"> <i class="fa fa-cog" style="color: #d8dce3;font-size:40px;""></i> </span>
+<span style="position:absolute;bottom:30px;left:2.6%;text-align:center;"> <i class="fa fa-question-circle" style="color: #d8dce3;font-size:40px;"></i></br> <span style="font-size:15px;color:#d8dce3;">help</span></span>
+</div>
+<!-- end left bar -->
+
+<!-- start class bar -->
+<div class="groups">
+
+<h4 style="padding: 10px 10px;"> Salles </h4>
+	<div class="classes">
+		{% for c in classes %}
+			{% if heis=="student"%}
+			<span class="clickgroups" style="padding-left:10px;">{{c}}</span></br>
+			{% endif %}
+			{% if heis=="instructor"%}
+			<span class="clickgroups" style="padding-left:10px;">{{c}}</span></br>
+			{% endif %}
+		{% endfor %}
+	</div>
+
+</div>
+<!-- end class bar -->
+
+<!-- start main page -->
+<div class="main">
+<span id="max" style="display:none;">{{max}}</span>
+{% if heis=="student"%}
+<h2 class="salle">{{currentclass}}</h2> <p id="sgroup" style="display:none;">{{group}}</p>
+{% endif %}
+{% if heis=="instructor"%}
+<h2 class="salle">{{currentclass}}</h2>
+{% endif %}
+
+<div class = 'head'> 
+	<span class="active"> Conversation </span>  
+	<span> fichiers </span> 
+	<span> notes <span> 
+</div>	
+	<div class="dropdown1">
+	
+	
+		
+ 		<button onclick="myFunction()" class="myButton video dropbtn1 " style="height:40px;width:200px;float:left;">discussion<span   style="position:relative;left:-70px;float:right;height:25px;width:25px;background-image:url('video.svg');background-repeat:no-repeat;top:-28px;"class="video dropbtn1"></span>
+ 		
+ 		<!--ongoing dot-->
+ 		<div class="loader" style="height:5px;position:relative;top:-35px;left:-40px;"><span onclick="myFunction()" class="loader__dot" style="color:#fa4e37;font-size: 10px;z-index:20;"><i class="fa fa-circle"></i></span></div></button>
+ 		
+ 		
+		<div id="myDropdown1" class="dropdown-content">
+ 		   <a href ="#" onclick="joinconversation()" id="join">rejoindre la conversation </a>
+ 		   {% if heis=="instructor"%}
+ 		   <a  href='#' onclick="startconversation()" id="start"> démarrer une conversation instantanée </a>
+ 		   <a href='#' id="plan">planifier une conversation </a>
+ 		   {% endif %}
+		</div>
+		
+		
+
+	</div>	
+
+<!-- messages div-->
+    <div class="scrollbar" style=";width:97%;" id="style-7">
+    
+    {% for c in chat %}
+    <div style="margin:10px;padding-bottom:20px;">
+    	<div style="display:inline;width:5%;float:left;"> <img src="{% if not c[3]%}/files/default.jpg{% else %}{{c[3]}}{% endif %}" alt="Girl in a jacket" width="45" height="45" style="border-radius:50%;"> </div> 
+    
+    
+    	<div style="background-color:white;width:92%;padding:10px;float:right;border-radius:5px;float:left;">
+    	 <div style=""> <h3 style="display:inline;"> {{ c[1] }}</h3> <span style="display:inline;font-size:14px;color:#adadad">{{c[0].strftime("%m/%d/%Y, %H:%M:%S")}} </span> </div>
+    	 <span> {{c[2]}} </span>
+    	
+    	
+    	
+    	</div>
+    	
+    </div>
+    </br>
+    </br>
+    {% endfor %}
+    
+    
+    
+      <div class="force-overflow"></div>
+    </div>
+    </br>
+<div class="form-group shadow-textarea" style="width:80;padding-left:10%;">
+	
+  <textarea class="form-control z-depth-1" id="textarea" rows="5" style="height:50px;font-size: 18px;background-color:white;" placeholder="démarrer une nouvelle conversation" ></textarea>
+  
+  
+  <span style="float:left;" id="file"> <i class="fa fa-paperclip"></i> </span>
+  <span style="float:left;" id="pic"> <i class="fa fa-image"></i> </span>
+  <span style="float:left;" id="pic" > <i class="fa fa-ellipsis-h" style="width:20px;"></i> </span>
+  <span style="float:right;margin-right:280px;" id="send"> <i class="fa fa-paper-plane"></i> </span>
+  
+</div>
+
+
+
+</div>
+<!-- end messages div -->
+<!-- end main page -->
+
+</div> 
+
+
+<script>
+
+frappe.ready(function() {
+var salle= $('.salle').text();
+
+	frappe.call({
+	
+				 method: "frappe.general.meetingexist", //dotted path to server method
+				 args:{ 'salle':salle},
+				callback: function(r) {
+				
+				
+					if (r.message=="1"){
+						$('.loader').show();
+						$( "#start" ).addClass( "disabledlink" );
+						$( "#plan" ).addClass( "disabledlink" );
+						$( "#join" ).removeClass( "disabledlink" );
+					
+					}
+					else
+					{
+					$('.loader').hide();
+					$( "#join" ).addClass( "disabledlink" );
+					$( "#start" ).removeClass( "disabledlink" );
+					$( "#plan" ).removeClass( "disabledlink" );
+					
+					
+					}
+				}
+			});
+
+
+
+
+
+});
+
+function joinconversation(){
+var salle= $('.salle').text();
+frappe.call({
+	
+				 method: "frappe.general.joinmeeting", //dotted path to server method
+				 args:{ 'salle':salle},
+				callback: function(r) {
+				window.open(r.message, "_blank");
+				
+				}
+			});
+
+}
+
+function startconversation(){
+var salle= $('.salle').text();
+
+frappe.call({
+	
+				 method: "frappe.general.startmeeting", //dotted path to server method
+				 args:{ 'salle':salle},
+				callback: function(r) {
+				window.open(r.message, "_blank");
+				
+				}
+			});
+			
+			
+}
+
+
+
+
+</script>
+
+
+

@@ -1,0 +1,429 @@
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<style>
+main{
+min-height:780px;
+margin-left:5%;
+
+}
+.dialog{
+background-color:red;
+}
+
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+</style>
+
+
+
+
+
+</br></br>
+</div class="main">
+
+
+<p>Impression des résultats</p>
+<p id ="terme"style="cursor:pointer; display: inline;margin-left:-20px;"> <img id="img1" style ="z-index:9;position:relative;width:17px;height:17px;"src="/files/caretdown.svg" alt="calendar"> trimestre académique</p>
+<p style="margin: 0; display: inline;margin-left:60px;" id="printbutton"align="right"><b>Imprimer</b>
+<div style="float:right;margin-right:50%;">
+</p> <p style="margin: 0; display: inline;margin-left:60px;" id="publier"align="right"><b>publier bulletin</b> <span id="ter">({{term}})<span></p>  </br>
+  <input class="inp-cbx c1" id="lastterm" type="checkbox" style="margin-left:60px;"/>
+<label class="cbx" for="lastterm"><span>
+    <svg width="12px" height="10px">
+      <use xlink:href="#check"></use>
+    </svg></span><span style="cursor: pointer;"id="lastterm">derniere semestre</span></label> 
+</div>
+
+
+
+<div class="term">
+<!-- term block -->
+{% for term in terms %}
+  <input class="inp-cbx c1" id="{{term[1]}}" type="checkbox"/>
+<label class="cbx" for="{{term[1]}}"><span>
+    <svg width="12px" height="10px">
+      <use xlink:href="#check"></use>
+    </svg></span><span style="cursor: pointer;"id="code19{{term[1]}}">{{term[0]}}</span></label> </br>
+{% endfor %}
+<!-- end term block-->
+</div>
+<p id ="group"style="cursor:pointer;margin-left:-20px;"><img id="img2" style ="z-index:9;position:relative;width:17px;height:17px;"src="/files/caretdown.svg" alt="calendar">Groupe</p>
+<div class="group">
+{% for group in groups %}
+  <input class="inp-cbx c2" id="{% if group =='Tous les groupes'%}tousg{%else %}{{group}}{% endif %}" type="checkbox"/>
+<label class="cbx" for="{% if group =='Tous les groupes'%}tousg{%else %}{{group}}{% endif %}"><span>
+    <svg width="12px" height="10px">
+      <use xlink:href="#check"></use>
+    </svg></span><span style="cursor: pointer;">{% if group =='Tous les groupes'%}Tous les groupes{%else %}Groupe {{group}}{% endif %}</span></label> </br>
+{% endfor %}
+</div>
+<p style="margin: 0; display: inline;margin-left:30px;cursor:pointer;" id="personaliser"><b>Personaliser</b></p>
+
+
+
+
+
+
+
+
+
+</div>
+
+<div style="left:400px;position:absolute;top:150px;">
+
+
+
+</div>
+
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <div class ="students">
+    
+    
+    </div>
+    <p style="margin: 0; display: inline;margin-left:60px;cursor:pointer;" id="printbutton2"><b>Imprimer</b></p>
+  </div>
+
+</div>
+
+
+
+
+<script>
+
+$(document).ready(function(){
+
+
+
+
+if($('#ter').text().slice(-3,-2) ==="2" &&  $('#ter').text().includes('Semestre') ){
+	$('#lastterm').prop('checked', true);
+	$('#lastterm').prop('disabled', true);
+	
+	}
+
+if($('#ter').text().slice(-3,-2) ==="3" &&  $('#ter').text().includes('Tremestre') ){
+	$('#lastterm').prop('checked', true);
+	$('#lastterm').prop('disabled', true);
+	
+	}
+
+var mvar = []
+var mvar1 = []
+$(".c1").each(function() {
+    
+    mvar.push( $(this).attr("id"));
+});
+$(".c2").each(function() {
+    
+    mvar1.push( $(this).attr("id"));
+});
+
+
+
+
+$("#personaliser").click(function(){
+	var terms=[];
+	var groups = [];
+	if ($('#tous').is(':checked')) terms.push("tous");
+	else {
+	for (i = 0; i < mvar.length; i++) {
+  			if ($('#'+mvar[i]).is(':checked')  && $('#'+mvar[i]).attr('id')!='tous' ) {terms.push( $('#code19'+mvar[i]).text()  )}
+  			}
+	
+	}
+	if ($('#tousg').is(':checked')) groups.push("tous");
+	else {
+	for (i = 0; i < mvar1.length; i++) {
+  			if ($('#'+mvar1[i]).is(':checked')  && $('#'+mvar1[i]).attr('id')!='tousg' ) {groups.push(mvar1[i])}
+  			}
+	
+	}
+	//if none is selected
+	if ( terms.length ==0 || groups.length==0){
+	
+		frappe.call({
+				 method: "frappe.general.erreur", //dotted path to server method
+				 args:{ 'err':'veuillez sélectionner au moins un terme et un groupe!'},
+				callback: function(r) {
+				}
+			});
+	
+	}
+	else{
+	
+	var first = terms.shift();
+	url =first;
+	for (i=0;i<terms.length;i++) {
+		url+="&"+terms[i];
+	}
+	var first = groups.shift();
+	url +="?"+first;
+	for (i=0;i<groups.length;i++) {
+		url+="&"+groups[i];
+	}
+	
+	frappe.call({
+				 method: "frappe.general.students", //dotted path to server method
+				 args:{ 'msg':url},
+				callback: function(r) {
+				$( ".students" ).html('');
+				var students = r.message.split('???');
+				//post students here .
+				$( ".students" ).append( "<input class='inp-cbx c2' id='touss' type='checkbox'/><label class='cbx' for='touss'><span><svg width='12px' height='10px'><use xlink:href='#check'></use></svg></span><span style='cursor: pointer;'>tous les élèves</span></label> </br> ");
+				for (i = 0; i < students.length; i++) {
+				var rr =students[i].split('&&');
+				
+				$( ".students" ).append( "<input class='inp-cbx c3' id='"+rr[0]+"' type='checkbox'/><label class='cbx' for='"+rr[0]+"'><span><svg width='12px' height='10px'><use xlink:href='#check'></use></svg></span><span style='cursor: pointer;'>"+rr[1]+"</span></label> </br> ");
+				
+				
+				}
+				
+				
+				
+				}
+			});
+	$("#myModal").show();
+	
+	
+	}
+
+});
+$(".close").click(function(){
+	$("#myModal").hide();
+
+});
+//click all in terms
+$('#tous').click(function() {
+  	if (!$(this).is(':checked')) {
+  		for (i = 0; i < mvar.length; i++) {
+  			$('#'+mvar[i]).prop('checked', false);
+}
+    }
+    else {
+    for (i = 0; i < mvar.length; i++) {
+  			$('#'+mvar[i]).prop('checked', true);
+}
+    
+    }
+  });
+//click all in groups
+$('#tousg').click(function() {
+  	if (!$(this).is(':checked')) {
+  		for (i = 0; i < mvar1.length; i++) {
+  			$('#'+mvar1[i]).prop('checked', false);
+}
+    }
+    else {
+    for (i = 0; i < mvar1.length; i++) {
+  			$('#'+mvar1[i]).prop('checked', true);
+}
+    
+    }
+  });
+// click a term
+$('.c1').click(function() {
+	if ( $(this).attr('id')!='tous') {
+	if ($(this).is(':checked')) {
+  	var yes = true;
+  	
+  		for (i = 0; i < mvar.length; i++) {
+  			if (!$('#'+mvar[i]).is(':checked')  && $('#'+mvar[i]).attr('id')!='tous' ) {var yes =false; break;}
+  			}
+  		if (yes) {$('#tous').prop('checked',true);}
+
+    }
+    else {
+    $('#tous').prop('checked',false);
+    
+    }
+  }});
+// click a group
+$('.c2').click(function() {
+	if ( $(this).attr('id')!='tousg') {
+	if ($(this).is(':checked')) {
+  	var yes = true;
+  	
+  		for (i = 0; i < mvar1.length; i++) {
+  			if (!$('#'+mvar1[i]).is(':checked')  && $('#'+mvar1[i]).attr('id')!='tousg' ) {var yes =false; break;}
+  			}
+  		if (yes) {$('#tousg').prop('checked',true);}
+
+    }
+    else {
+    $('#tousg').prop('checked',false);
+    
+    }
+  }});
+
+$('#terme').click(function() {
+	 if ($ ('#img1').attr("src")=="/files/caretdown.svg") {
+		$("#img1").attr("src","/files/caretup.svg");}
+	else {$("#img1").attr("src","/files/caretdown.svg")};
+$(".term").slideToggle();
+
+});
+$('#group').click(function() {
+	 if ($ ('#img2').attr("src")=="/files/caretdown.svg") {
+		$("#img2").attr("src","/files/caretup.svg");}
+	else {$("#img2").attr("src","/files/caretdown.svg")};
+$(".group").slideToggle();
+
+});
+//click print button
+$('#printbutton').click(function() {
+
+/*
+frappe.confirm(
+    'Are you sure to leave this page?',
+    function(){
+        window.close();
+    },
+    function(){
+        show_alert('Thanks for continue here!')
+    }
+)*/
+	var terms=[];
+	var groups = [];
+	if ($('#tous').is(':checked')) terms.push("tous");
+	else {
+	for (i = 0; i < mvar.length; i++) {
+  			if ($('#'+mvar[i]).is(':checked')  && $('#'+mvar[i]).attr('id')!='tous' ) {terms.push( $('#code19'+mvar[i]).text()  )}
+  			}
+	
+	}
+	if ($('#tousg').is(':checked')) groups.push("tous");
+	else {
+	for (i = 0; i < mvar1.length; i++) {
+  			if ($('#'+mvar1[i]).is(':checked')  && $('#'+mvar1[i]).attr('id')!='tousg' ) {groups.push(mvar1[i])}
+  			}
+	
+	}
+	//if none is selected
+	if ( terms.length ==0 || groups.length==0){
+	
+		frappe.call({
+				 method: "frappe.general.erreur", //dotted path to server method
+				 args:{ 'err':'veuillez sélectionner au moins un terme et un groupe!'},
+				callback: function(r) {
+				}
+			});
+	
+	}
+	else{
+	
+	var url = "/printbulletin";
+	var first = terms.shift();
+	url +="?"+first;
+	for (i=0;i<terms.length;i++) {
+		url+="&"+terms[i];
+	}
+	var first = groups.shift();
+	url +="?"+first;
+	for (i=0;i<groups.length;i++) {
+		url+="&"+groups[i];
+	}
+	
+	frappe.call({
+				 method: "frappe.student.check_combinations", //dotted path to server method
+				 args:{ 'url':url},
+				callback: function(r) {
+				var res=r.message;
+				
+				if (res){
+					window.open(url, "_blank");}
+				}
+				
+			});
+	
+	
+	}
+ 	
+
+});
+//click print button 2
+$('#printbutton2').click(function() {
+	var terms=[];
+	if ($('#tous').is(':checked')) terms.push("tous");
+	else {
+	for (i = 0; i < mvar.length; i++) {
+  			if ($('#'+mvar[i]).is(':checked')  && $('#'+mvar[i]).attr('id')!='tous' ) {terms.push( $('#code19'+mvar[i]).text()  )}
+  			}
+	
+	}
+	
+	var st = []
+	var url= "/printbulletin";
+	$(".c3").each(function() {
+    		if ( $(this).is(':checked') ) {
+    			url+='?'+$(this).attr('id');
+    		}
+	});
+	url+='&&';
+	for (i=0;i<terms.length;i++) {
+		url+="&"+terms[i];
+	}
+	
+	window.open(url, "_blank");
+
+
+
+});
+
+
+$('#publier').click(function() {
+	
+	frappe.call({
+				 method: "frappe.student.publier", //dotted path to server method
+				 args:{ "last":$('#lastterm').is(':checked')},
+				callback: function(r) {
+				
+				}
+				
+			});
+
+
+
+});
+  
+  
+  
+});
+</script>
+

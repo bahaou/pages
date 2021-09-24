@@ -1,0 +1,191 @@
+body, html {
+  height: 100%;
+}
+.cantainer1{
+display: flex;
+    justify-content: center;
+  height:980px;;
+
+z-index:-999;
+
+width:100%;
+
+
+}.left-bar{
+width:4%;
+
+background-color:#07378a;
+
+
+}
+.groups{
+width:15%;
+
+background-color:white;
+
+}
+.main{
+width:80%;
+
+background-color:#f2f2f0;
+
+}
+.salle{
+padding-left:30px;
+padding-top:20px;
+font-family: Arial, Helvetica, sans-serif;
+}
+
+.head{
+padding-left:30px;
+
+}
+span{
+cursor:pointer;
+padding-right:10px;
+font-size:20px;
+}
+.active{
+text-decoration: underline;
+color:#9b5bf5;
+}
+.video{
+font-size:35px;
+float:right;
+padding-right:40px;
+}
+
+.dropbtn1 {
+ 
+  
+ 
+  border: none;
+  cursor: pointer;
+  float:right:
+}
+
+/* Dropdown button on hover & focus */
+.dropbtn1:hover, .dropbtn:focus {
+  
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown1 {
+ left:85%;
+ top: -40px;
+  display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 200px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  top:145px;
+  right:100px;
+  
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: black;
+  padding: 10px 10px;
+  text-decoration: none;
+  display: block;
+  font-size:15px;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #ddd}
+
+/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+.show {display:block;}
+
+.disabledlink{
+pointer-events: none;
+}
+@keyframes blink {50% { color: transparent }}
+.loader__dot { animation: 1s blink infinite }
+.loader__dot:nth-child(2) { animation-delay: 500ms }
+.loader__dot:nth-child(3) { animation-delay: 500ms }
+
+
+.myButton {
+	background-color:#ffffff;
+	border-radius:11px;
+	border:1px solid ##cacfcc;
+	
+	cursor:pointer;
+	color:black;
+	font-family:Arial;
+	font-size:20px;
+	font-weight:bold;
+	padding:6px 76px;
+	text-decoration:none;
+	text-shadow:0px 1px 50px #2f6627;
+	padding-right:50px;
+	position:absolute;
+	right:60px;
+	top:100px;
+}
+.myButton:hover {
+	background-color:#cacfcc;
+}
+.myButton:active {
+	
+	
+}
+
+        
+.scrollbar
+{
+	margin-left: 30px;
+	float: left;
+	height: 75%;
+	width: 98%;
+	
+	overflow-y: scroll;
+	margin-bottom: 25px;
+	background-color:#f2f2f0;
+}
+
+.force-overflow
+{
+	
+}
+
+
+
+#style-7::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #F5F5F5;
+	border-radius: 10px;
+}
+
+#style-7::-webkit-scrollbar
+{
+	width: 10px;
+	background-color: #F5F5F5;
+}
+
+#style-7::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	background-image: -webkit-gradient(linear,
+									   left bottom,
+									   left top,
+									   color-stop(0.44, rgb(122,153,217)),
+									   color-stop(0.72, rgb(73,125,189)),
+									   color-stop(0.86, rgb(28,58,148)));
+}
+
+
+#textarea{
+height:50px;
+width:80%;
+}
+
