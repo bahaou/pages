@@ -1,0 +1,516 @@
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.6/jspdf.plugin.autotable.min.js"></script> 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+<script src="https://unpkg.com/swiper@6.5.0/swiper-bundle.min.js"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@1,200&family=Roboto+Mono:ital,wght@1,300&family=Signika:wght@300&display=swap" rel="stylesheet">
+<style>
+.eventname
+{
+    font-size: 1.1em;
+    font-weight: bold;
+    outline: 0;
+    color :{{color}};
+}
+</style>
+<div class="container19">
+<div class="side">
+</br></br></br>
+	<h3> Evènements à venir </h3>
+	<hr>
+	{% set on=[0]%}
+	{% for e in events%}
+		<div class="event">
+			<h4 style="font-family: 'Signika', sans-serif;"> {{e[0]}} </h4>
+			<p> {{e[2]}} ( {{e[3]}}-{{e[4]}})</p> 
+			<p style="line-height:10px;display:none;" class='eventplus{{on[0]}}'>  {% if e[7] %} Matiére : {{e[7] }} {% endif %}  </p>
+			<p style="line-height:10px;display:none;" class='eventplus{{on[0]}}'>  {% if e[5] %} Instructeur : {{e[5] }} {% endif %}  </p>
+			<p style="line-height:10px;display:none;" class='eventplus{{on[0]}}'>  {% if e[6] %} classe : {{e[6] }} {% endif %}  </p>
+			
+			<span class="plusevent" id='plus{{on[0]}}' style="font-size:15px;cursor: pointer;color:#006199"><i class="fa fa-plus"></i> Plus de détails</span>
+		</div>
+		<hr style="width:80%;">
+		{% if on.insert(0,on.pop(0)+1) %}{% endif %}
+	{%endfor%}
+
+
+</div>
+
+</div>
+
+<div class=="emploi" style="">
+<a href='/' style="color:gray;"> ACCEUIL </a> > <a href='/student' style="color:gray;"> ELEVE </a> > <span style="color:gray;"> CALENDRIER </span>
+<!-- print button-->
+<button style="float:right;margin-right:10px;height:40px;width:40px;" class="text-muted btn btn-default  icon-btn" title="" data-original-title="Print" onclick="print()" >
+				<svg class="icon icon-sm" style="">
+			<use class="" href="#icon-printer"></use>
+		</svg>
+</button>
+<h1 class="fsPageTitle"  >Calendrier</h1>
+<span style=";text-align: center;margin-top:-30px;line-height:0.7em;" >  <h2 id ="groupe"  > Groupe {{groupe }}</h2> <p> {{program}}</p>
+</span>
+
+{% set toda = date[2][:2] | int - date[0][:2] | int %}
+{%set days=["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"] %}
+{% set today=days[toda]%}
+<button type="button" class="btn btn-dark s mobile pc sem">Semaine</button>
+<button type="button" class="btn btn-light s mobile pc j">Jour</button>
+<button type="button" class="btn btn-light b pc bA" style=" margin-right:4%;" >Semaine A</button>
+<button type="button" class="btn btn-light b pc bB" style=" margin-right:10px;" >Semaine B</button>
+<button type="button" class="btn btn-light b mobile bA2" style=" margin-left:10px;" >A</button>
+<button type="button" class="btn btn-light b mobile bB2">B</button>
+
+<div class="semaine"  style="text-align: center;"> {{ date[0]   }} <i class="fa fa-arrow-right"></i>  {{ date[1] }}</div>
+{% set time=[8,9,10,11,12,13,14,15,16,17]%}
+<table class="semaine" id = "tab" style="display:none; border: 2px solid #d9d9d9;" >
+	<tr>
+	<th colspan=60 class="cell"> </th>
+	{%for t in time %}
+	<th colspan=60> <span class="pc"> {{t}}:00-</br>{{t+1}}:00 </span> <span class="mobile"> {{t}}-{{t+1}} </span>  </th>
+	{% endfor %}
+	</tr>
+	{% set id=[0]%}
+	{% for ca in calendarA%}
+		{% set c = ca[1]%}
+		{% set hour=[8]%}
+		{% set minute=[0]%}
+		<!-- buckle all 6 days-->
+		<tr     style="background-color:#f5f5f5;height:80px;"  >
+		<td colspan=60 style="width:100%;"> <span class="pc" > {{ca[0]}} </span><span class="mobile"> {{ca[0][:3]}}</span></td>
+		<!-- IF all day is empty -->
+		{% if not c %}
+			{% for t in time %}
+				<td colspan=60   {% if ca[0] == today %}   style="background-color:#f5f5f5;"  {% endif %}></td>
+			{% endfor %}
+		{% else %} <!--  if day is not empty-->
+			<!--  buckle scheudle-->
+			{% for s in c%}
+			{% set h = s[0]["fromhour"]%}	
+			{% set m = s[0]["fromminute"]%}	
+			{% set space = (h-hour[0]) * 60 + m - minute[0]%}
+			{%set duration = ( s[0]["tohour"] - s[0]["fromhour"] ) * 60 + s[0]["tominute"] - s[0]["fromminute"] %}
+			{% if space > 0 %} <!-- put space before the block -->
+				{% set space2=[space]%}
+				{% for i in [1,2,3,4,5,6,7,8,9,10]%}
+					{% if space2[0] > 0 %}
+					{% if 60 - minute[0] <= space2[0]%}
+						<td colspan= {{60-minute[0]}} {% if ca[0] == today %}   style="background-color:#f5f5f5;"  {% endif %} >  </td>
+						{% if space2.append(space2.pop(0)-60+minute[0]) %}{% endif %}
+						{% if  minute.pop(0)%} {% endif %}
+						{% if minute.append(0) %}{% endif %}
+					{% else %}
+						<td colspan= {{space2[0]}} {% if ca[0] == today %}   style="background-color:#f5f5f5;"  {% endif %} > </td>
+						{% if  space2.pop(0)%} {% endif %}
+						{% if space2.append(0) %}{% endif %}
+					{% endif %}
+					{% endif %}
+				{% endfor %}
+			{% endif %}
+				<!-- inserting the block -->
+				<td colspan = {{duration }} {% if ca[0] == today %}   style="background-color:#f5f5f5;"  {% endif %} >
+				<div style="display:none;" id = "timeid{{id[0]}}"> {{s[0]["fromhour"]}}:{% if s[0]["fromminute"] <10 %}{{s[0]["fromminute"]}}0{% else %}{{s[0]["fromminute"]}}{%endif%} ->  {{s[0]["tohour"]}}:{% if s[0]["tominute"] <10 %}{{s[0]["tominute"]}}0{% else %}{{s[0]["tominute"]}}{%endif%}</div> 
+				<div style="display:none;"id ="dayid{{id[0]}}" >{{ca[0]}}</div>
+				<!-- Schedule block -->
+				
+				{% if s[-1]  and s[6]=='B' %}   <div class="semA" style="height:50%;float:top;">
+		{% if  ca[0] == today and  ( s[0]["fromhour"] < now[0] or ( s[0]["fromhour"] == now[0] and s[0]["fromminute"] <= now[1] ))  and  (s[0]["tohour"] > now[0]  or (s[0]["tohour"] == now[0] and s[0]["tominute"] >= now[1] )) %}
+    				<div class="loader" style = "float:right;vertical-align: top;"><span class="loader__dot" style="color:#fa4e37;font-size: 10px;"><i class="fa fa-circle"></i></span></div> <div style="display:none;"id ="encoursid{{id[0]}}" >yes</div>
+    			{% endif %}
+				
+    		 <span class="eventname pc" id="coursid{{id[0]}}" > {{ s[-4] }}  </Span>   <span class="eventname mobile"id="coursid{{id[0]}}" > {{ s[-4][:2] }}  </Span>  </br> 
+    		<span class="pc" id="" > salle {{ s[-2] }}  </Span>   <span class="mobile"id="" > {{ s[-2] }}  </Span> 
+    		 
+    		 
+    		</div>
+    		
+    		
+    				{%endif%}
+				
+				
+				<div  {% if s[-1] %}   style="height:50%; " {%endif%}   class='pc sem{{s[6]}}'    >
+				<!-- block normal -->
+				
+				
+    			{% if  ca[0] == today and (s[6] =='A' or not s[-1]) and  ( s[0]["fromhour"] < now[0] or ( s[0]["fromhour"] == now[0] and s[0]["fromminute"] <= now[1] ))  and  (s[0]["tohour"] > now[0]  or (s[0]["tohour"] == now[0] and s[0]["tominute"] >= now[1] )) %}
+    			
+    				<div class="loader" style = "float:right;vertical-align: top;   transform: translate(-5px,-8px);"><span class="loader__dot" style="color:#fa4e37;font-size: 10px;"><i class="fa fa-circle"></i></span></div> <div style="display:none;"id ="encoursid{{id[0]}}" >yes</div>
+    			{% endif %}
+    			{% if s[5] == 'tp'%}
+    				<span style="float:left;margin-top:0%;">tp</span>
+    					{% elif s[5]== 'cours' %}
+    				<span style="float:left;margin-top:0%;">c</span>
+    					{% else %}
+    					{% endif %}
+    			<div style = "height:100%; line-height: normal;padding:5px;" class="con" >
+    				<div style="">
+    					
+    				<span class=eventname id="coursid{{id[0]}}" > {{ s[2] }}  </Span> </br>
+    			<span id="insid{{id[0]}}"   {% if s[-1] %}   style="display:none;" {%endif%}>   {{ s[3] }} </span>   {% if not s[-1] %}  <br> {%endif%}
+    			 <span id="salleid{{id[0]}}"> salle {{ s[4] }} </span>
+    			 	</div>
+    			</div>
+    		</div>
+    		
+    		
+    		 {% if s[-1]  and s[6]=='A' %}  
+    		 
+    		 
+    		  <div class ="pc semB"style="height:50%;float:top;">
+    		 <div style = "height:100%;" class="con" >
+    				<div style=" line-height: normal;">
+    					
+    				<span class=eventname id="coursid{{id[0]}}" > {{ s[-4] }}  </Span> </br>
+    			
+    			 <span id="salleid{{id[0]}}" style="margin-top:-5px;"> salle {{ s[-2] }} </span>
+    			 	</div>
+    			</div>
+    		 
+    		 
+    		</div>
+    		
+    		
+    		{%endif%}
+    		<!-- if mobile  -->
+    		<div class='mobile'  data-toggle="modal" data-target="#exampleModalCenter" id="id{{id[0]}}">
+    		
+    			{% if  ca[0] == today and  s[0]["fromhour"] <= now[0] and s[0]["fromminute"] <= now[1]  and  (s[0]["tohour"] > now[0]  or (s[0]["tohour"] == now[0] and s[0]["tominute"] >= now[1] )) %}
+    				<div class="loader" style = "float:right;vertical-align: top;"><span class="loader__dot" style="color:#fa4e37;font-size: 10px;"><i class="fa fa-circle"></i></span></div>
+    			{% endif %}
+    			<div style = "height:100%;" class="con" >
+    				<div style="">
+    				<span class=eventname > {{ s[2][:2] }}   </Span> </br>
+    			
+    			  {{ s[4] }}
+    			 	</div>
+    			</div>
+    		</div>
+    		{% if s[-1]  and s[6]=='A' %}   <div class ="mobile"style="height:10%;float:top;border-top:solid; 1px;border-color: #d9d9d9;">
+    		 <span class=eventname id="coursid{{id[0]}}" > {{ s[-4][:2] }}  </Span> </br> 
+    		 {{ s[-2]}}
+    		</div>
+    		{%endif%}
+    		<!-- end Schedule block -->
+    		{% if id.insert(0,id.pop(0)+1) %}{% endif %}
+				
+				</td>
+				<!--  resetting next start-->
+				{% if hour.pop(0) %}{% endif %}
+				{% if minute.pop(0) %}{% endif %}
+				{% if hour.append(s[0]["tohour"]) %}{% endif %}
+				{% if minute.append(s[0]["tominute"]) %}{% endif %}
+			
+			{% endfor %}
+			{% set space2 = [(18-hour[0]) * 60  - minute[0]]%}
+			{% if space2[0] > 0 %} <!-- put space on the rest of teh day  -->
+				{% for i in [1,2,3,4,5,6,7,8,9,10]%}
+					{% if space2[0] > 0 %}
+					{% if 60 - minute[0] <= space2[0]%}
+						<td colspan= {{60-minute[0]}} {% if ca[0] == today %}   style="background-color:#f5f5f5;"  {% endif %} > </td>
+						{% if space2.append(space2.pop(0)-60+minute[0]) %}{% endif %}
+						{% if  minute.pop(0)%} {% endif %}
+						{% if minute.append(0) %}{% endif %}
+					{% else %}
+						<td colspan= {{space2[0]}} {% if ca[0] == today %}   style="background-color:#f5f5f5;"  {% endif %} ></td>
+						{% if  space2.pop(0)%} {% endif %}
+						{% if space2.append(0) %}{% endif %}
+					{% endif %}
+					{% endif %}
+				{% endfor %}
+				
+			{% endif %}
+		{% endif %}
+		</tr>
+	{% endfor %}
+</table>
+<div class = "jour" style="text-align: center;"> {{ tod }}  (Semaine {{semaine}})</div>
+<table class="jour" id = "tab" style="display:none; border: 2px solid #d9d9d9;" >
+	<tr>
+	<th colspan=60 class="cell"> </th>
+	{%for t in time %}
+	<th colspan=60> <span class="pc"> {{t}}:00-</br>{{t+1}}:00 </span> <span class="mobile"> {{t}}-{{t+1}} </span>  </th>
+	{% endfor %}
+	</tr>
+	{% for ca in calendarA%}
+		{% if ca[0]==today%}
+		{% set c = ca[1]%}
+		{% set hour=[8]%}
+		{% set minute=[0]%}
+		<!-- buckle all 6 days-->
+		<tr     style="background-color:#f5f5f5;height:80px;"  >
+		<td colspan=60 style="width:100%;"> <span class="pc" > {{ca[0]}} </span><span class="mobile"> {{ca[0][:3]}}</span></td>
+		<!-- IF all day is empty -->
+		{% if not c %}
+			{% for t in time %}
+				<td colspan=60   {% if ca[0] == today %}   style="background-color:#f5f5f5;"  {% endif %}></td>
+			{% endfor %}
+		{% else %} <!--  if day is not empty-->
+			<!--  buckle scheudle-->
+			{% for s in c%}
+			{% set h = s[0]["fromhour"]%}	
+			{% set m = s[0]["fromminute"]%}	
+			{% set space = (h-hour[0]) * 60 + m - minute[0]%}
+			{%set duration = ( s[0]["tohour"] - s[0]["fromhour"] ) * 60 + s[0]["tominute"] - s[0]["fromminute"] %}
+			{% if space > 0 %} <!-- put space before the block -->
+				{% set space2=[space]%}
+				{% for i in [1,2,3,4,5,6,7,8,9,10]%}
+					{% if space2[0] > 0 %}
+					{% if 60 - minute[0] <= space2[0]%}
+						<td colspan= {{60-minute[0]}} {% if ca[0] == today %}   style="background-color:#f5f5f5;"  {% endif %} >  </td>
+						{% if space2.append(space2.pop(0)-60+minute[0]) %}{% endif %}
+						{% if  minute.pop(0)%} {% endif %}
+						{% if minute.append(0) %}{% endif %}
+					{% else %}
+						<td colspan= {{space2[0]}} {% if ca[0] == today %}   style="background-color:#f5f5f5;"  {% endif %} > </td>
+						{% if  space2.pop(0)%} {% endif %}
+						{% if space2.append(0) %}{% endif %}
+					{% endif %}
+					{% endif %}
+				{% endfor %}
+			{% endif %}
+				<!-- inserting the block -->
+				<td colspan = {{duration }} {% if ca[0] == today %}   style="background-color:#f5f5f5;"  {% endif %} >
+				<div style="display:none;" id = "timeid{{id[0]}}"> {{s[0]["fromhour"]}}:{% if s[0]["fromminute"] <10 %}{{s[0]["fromminute"]}}0{% else %}{{s[0]["fromminute"]}}{%endif%} ->  {{s[0]["tohour"]}}:{% if s[0]["tominute"] <10 %}{{s[0]["tominute"]}}0{% else %}{{s[0]["tominute"]}}{%endif%}</div> 
+				<div style="display:none;"id ="dayid{{id[0]}}" >{{ca[0]}}</div>
+				<!-- Schedule block -->
+				
+				{% if s[-1]  and s[6]=='B' %}   <div class="semA" style="height:50%;float:top;">
+		{% if  ca[0] == today and  ( s[0]["fromhour"] < now[0] or ( s[0]["fromhour"] == now[0] and s[0]["fromminute"] <= now[1] ))  and  (s[0]["tohour"] > now[0]  or (s[0]["tohour"] == now[0] and s[0]["tominute"] >= now[1] )) %}
+    				<div class="loader" style = "float:right;vertical-align: top;"><span class="loader__dot" style="color:#fa4e37;font-size: 10px;"><i class="fa fa-circle"></i></span></div> <div style="display:none;"id ="encoursid{{id[0]}}" >yes</div>
+    			{% endif %}
+				
+    		 <span class="eventname pc" id="coursid{{id[0]}}" > {{ s[-4] }}  </Span>   <span class="eventname mobile"id="coursid{{id[0]}}" > {{ s[-4][:2] }}  </Span>  </br> 
+    		<span class="pc" id="" > salle {{ s[-2] }}  </Span>   <span class="mobile"id="" > {{ s[-2] }}  </Span> 
+    		 
+    		 
+    		</div>
+    		
+    		
+    				{%endif%}
+				
+				
+				<div  {% if s[-1] %}   style="height:50%; " {%endif%}   class='pc sem{{s[6]}}'    >
+				<!-- block normal -->
+    			{% if  ca[0] == today and (s[6] =='A' or not s[-1]) and  ( s[0]["fromhour"] < now[0] or ( s[0]["fromhour"] == now[0] and s[0]["fromminute"] <= now[1] ))  and  (s[0]["tohour"] > now[0]  or (s[0]["tohour"] == now[0] and s[0]["tominute"] >= now[1] )) %}
+    				<div class="loader" style = "float:right;vertical-align: top;   transform: translate(-5px,-8px);"><span class="loader__dot" style="color:#fa4e37;font-size: 10px;"><i class="fa fa-circle"></i></span></div> <div style="display:none;"id ="encoursid{{id[0]}}" >yes</div>
+    			{% endif %}
+    			{% if s[5] == 'tp'%}
+    				<span style="float:left;margin-top:0%;">tp</span>
+    					{% elif s[5]== 'cours' %}
+    				<span style="float:left;margin-top:0%;">c</span>
+    					{% else %}
+    					{% endif %}
+    			<div style = "height:100%; line-height: normal;padding:5px;" class="con" >
+    				<div style="">
+    					
+    				<span class=eventname id="coursid{{id[0]}}" > {{ s[2] }}  </Span> </br>
+    			<span id="insid{{id[0]}}"   {% if s[-1] %}   style="display:none;" {%endif%}>   {{ s[3] }} </span>   {% if not s[-1] %}  <br> {%endif%}
+    			 <span id="salleid{{id[0]}}"> salle {{ s[4] }} </span>
+    			 	</div>
+    			</div>
+    		</div>
+    		
+    		
+    		 {% if s[-1]  and s[6]=='A' %}  
+    		 
+    		 
+    		  <div class ="pc semB"style="height:50%;float:top;">
+    		 <div style = "height:100%;" class="con" >
+    				<div style=" line-height: normal;">
+    					
+    				<span class=eventname id="coursid{{id[0]}}" > {{ s[-4] }}  </Span> </br>
+    			
+    			 <span id="salleid{{id[0]}}" style="margin-top:-5px;"> salle {{ s[-2] }} </span>
+    			 	</div>
+    			</div>
+    		 
+    		 
+    		</div>
+    		
+    		
+    		{%endif%}
+    		<!-- if mobile  -->
+    		<div class='mobile'  data-toggle="modal" data-target="#exampleModalCenter" id="id{{id[0]}}">
+    		
+    			{% if  ca[0] == today and  s[0]["fromhour"] <= now[0] and s[0]["fromminute"] <= now[1]  and  (s[0]["tohour"] > now[0]  or (s[0]["tohour"] == now[0] and s[0]["tominute"] >= now[1] )) %}
+    				<div class="loader" style = "float:right;vertical-align: top;"><span class="loader__dot" style="color:#fa4e37;font-size: 10px;"><i class="fa fa-circle"></i></span></div>
+    			{% endif %}
+    			<div style = "height:100%;" class="con" >
+    				<div style="">
+    				<span class=eventname > {{ s[2][:2] }}   </Span> </br>
+    			
+    			  {{ s[4] }}
+    			 	</div>
+    			</div>
+    		</div>
+    		{% if s[-1]  and s[6]=='A' %}   <div class ="mobile"style="height:50%;float:top;border-top:solid; 1px;border-color: #d9d9d9;">
+    		 <span class=eventname id="coursid{{id[0]}}" > {{ s[-4][:2] }}  </Span> </br> 
+    		 {{ s[-2]}}
+    		</div>
+    		{%endif%}
+    		<!-- end Schedule block -->
+    		{% if id.insert(0,id.pop(0)+1) %}{% endif %}
+				
+				</td>
+				<!--  resetting next start-->
+				{% if hour.pop(0) %}{% endif %}
+				{% if minute.pop(0) %}{% endif %}
+				{% if hour.append(s[0]["tohour"]) %}{% endif %}
+				{% if minute.append(s[0]["tominute"]) %}{% endif %}
+			
+			{% endfor %}
+			{% set space2 = [(18-hour[0]) * 60  - minute[0]]%}
+			{% if space2[0] > 0 %} <!-- put space on the rest of teh day  -->
+				{% for i in [1,2,3,4,5,6,7,8,9,10]%}
+					{% if space2[0] > 0 %}
+					{% if 60 - minute[0] <= space2[0]%}
+						<td colspan= {{60-minute[0]}} {% if ca[0] == today %}   style="background-color:#f5f5f5;"  {% endif %} > </td>
+						{% if space2.append(space2.pop(0)-60+minute[0]) %}{% endif %}
+						{% if  minute.pop(0)%} {% endif %}
+						{% if minute.append(0) %}{% endif %}
+					{% else %}
+						<td colspan= {{space2[0]}} {% if ca[0] == today %}   style="background-color:#f5f5f5;"  {% endif %} ></td>
+						{% if  space2.pop(0)%} {% endif %}
+						{% if space2.append(0) %}{% endif %}
+					{% endif %}
+					{% endif %}
+				{% endfor %}
+				
+			{% endif %}
+		{% endif %}
+		</tr>
+	{% endif %}
+	{% endfor %}
+</table>
+<!-- phone  -->
+{% set days =["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi"]%}
+{% set on=[7]%}
+ <div class="swiper-container mini" style="display:none;width:100%;">
+ 	
+    <div class="swiper-wrapper">
+    {% for ca in calendarA %}
+    {% set hour=[8]%}
+    {% set minute=[0]%}
+    {% set l =ca[1] %}
+      <div class="swiper-slide">
+      <div class="wrapper">
+      <table style="border-radius:20px;width:100%;">
+       <tr><th colspan=2 style="border-radius:20px;">  {{ca[0]}} </th></tr>
+       <tr>
+       <td style="border-width: 0px;width:100%;" >
+       
+       	{% for i in range(8,18)%}
+       		<div style="height:{{60*1.5}}px;border-bottom: 1px solid #d9d9d9;border-right: 1px solid #d9d9d9;" class="con"> {{i}}:00-{{i+1}}:00 </div>
+       	{% endfor %}
+       
+       </td>
+        <td style="border-width: 0px;">
+        
+        	{% for s in l %}
+       		{% set h = s[0]["fromhour"]%}	
+			{% set m = s[0]["fromminute"]%}	
+			{% set space = (h-hour[0]) * 60 + m - minute[0]%}
+			{%set duration = ( s[0]["tohour"] - s[0]["fromhour"] ) * 60 + s[0]["tominute"] - s[0]["fromminute"] %}
+			{% if space > 0 %} <!-- put space before the block -->
+				
+				{% set space2=[space]%}
+				{% for i in [1,2,3,4,5,6,7,8,9,10]%}
+					{% if space2[0] > 0 %}
+					{% if 60 - minute[0] <= space2[0]%}
+						<div style="height:{{(60-minute[0])*1.5}}px;border-bottom: 1px solid #d9d9d9;"> </div>
+						{% if space2.append(space2.pop(0)-60+minute[0]) %}{% endif %}
+						{% if  minute.pop(0)%} {% endif %}
+						{% if minute.append(0) %}{% endif %}
+					{% else %}
+						<div style="height:{{(space2[0])*1.5}}px;border-bottom: 1px solid #d9d9d9;"> </div>
+						{% if  space2.pop(0)%} {% endif %}
+						{% if space2.append(0) %}{% endif %}
+					{% endif %}
+					{% endif %}
+				{% endfor %}
+			{%endif%}
+				<div style="height:{{duration*1.5}}px;border-bottom: 1px solid #d9d9d9;" class="con">{% if  ca[0] == today and  ( s[0]["fromhour"] < now[0] or ( s[0]["fromhour"] == now[0] and s[0]["fromminute"] <= now[1] ))  and  (s[0]["tohour"] > now[0]  or (s[0]["tohour"] == now[0] and s[0]["tominute"] >= now[1] )) %}
+    				<div class="loader" style = "float:right;vertical-align: top;"><span class="loader__dot" style="color:#fa4e37;font-size: 10px;"><i class="fa fa-circle"></i></span></div>
+    			{% endif %} <div> <span class="eventname" > {{ s[2] }}  </Span> </br> {{s[3]}}</br>Salle {{s[4]}}</div> </div>
+			{% if hour.pop(0) %}{% endif %}
+				{% if minute.pop(0) %}{% endif %}
+				{% if hour.append(s[0]["tohour"]) %}{% endif %}
+				{% if minute.append(s[0]["tominute"]) %}{% endif %}
+       	{% endfor %}
+       	{% set space2 = [(18-hour[0]) * 60  - minute[0]]%}
+			{% if space2[0] > 0 %} <!-- put space on the rest of teh day  -->
+				{% for i in [1,2,3,4,5,6,7,8,9,10]%}
+					{% if space2[0] > 0 %}
+					{% if 60 - minute[0] <= space2[0]%}
+						<div style="height:{{(60-minute[0])*1.5}}px;border-bottom: 1px solid #d9d9d9;"> </div>
+						{% if space2.append(space2.pop(0)-60+minute[0]) %}{% endif %}
+						{% if  minute.pop(0)%} {% endif %}
+						{% if minute.append(0) %}{% endif %}
+					{% else %}
+						<div style="height:{{space2[0]*1.5}}px;border-bottom: 1px solid #d9d9d9;"> </div>
+						{% if  space2.pop(0)%} {% endif %}
+						{% if space2.append(0) %}{% endif %}
+					{% endif %}
+					{% endif %}
+				{% endfor %}
+				
+			{% endif %}
+        
+        </td>
+       </tr>
+      </table>
+      </div>
+      
+      </div>
+    {% endfor %}
+      
+    </div>
+    </br> <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button> 
+    <!-- Add Pagination -->
+    <div class="swiper-pagination"></div>
+    <!-- Add Arrows -->
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+  </div>
+  
+  
+  
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" >
+  <div class="modal-dialog modal-dialog-centered" role="document" style="width:60%;">
+    <div class="modal-content"style="text-align:center;">
+      <div class="modal-header" style="text-align:center;">
+        <h5 class="modal-title" id="exampleModalLongTitle"></h5><p id="modalencours"> </p>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p id="modalins"> </p>
+        <p id="modalsalle"> </p>
+        <p id="modaltime"> </p>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+</div>
+</div>
+<div style="height:200px;">
+

@@ -1,0 +1,42 @@
+</br>
+{% if group%}
+	{%set days=["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"]%}
+	<button style="float:right;margin:1px;width:80px;height:30px;"class="btn btn-primary btn-sm primary-action" data-label="Save" >S<span class="alt-underline">a</span>ve</button>
+	<button style="float:right;margin-right:10px;height:30px;" class="text-muted btn btn-default  icon-btn" title="" data-original-title="Print" onclick="generate()" >
+				<svg class="icon icon-sm" style="">
+			<use class="" href="#icon-printer"></use>
+		</svg>
+			</button>
+			
+	<div id="jour"  style="text-align: center;display:none"><span id="today">{{jour}}</span> {{ today }}  </div>
+	
+	<div id="semaine"  style="text-align: center;"><span id="today">{{semaine[0]}}</span>-> {{ semaine[1] }}  </div>
+	
+	<button type="button" class="jour btn btn-light">jour</button>
+<button type="button" class="semaine btn btn-light">semaine</button></br></br>
+	<table >
+	<tr>
+		<th rowspan = 2> </th> {%for i in di%}  <th class="{{i[0]}}"colspan={{i[1]}}> {{i[0]}} </th> {%endfor%}
+	</tr>
+	
+	<tr>
+		{%for a in allc %}  {% for c in a[1] %} <td class="{{a[0]}}" > {{c[2]}} </td> {% endfor%}  {% endfor %}
+	</tr>
+	
+	
+	
+	
+	{% for s in students %} <tr> <td> {{s}} </td> {%for a in allc %}  {% for c in a[1] %} <td class="{{a[0]}}"> <input type="text" id="id" name="name" > </td> {% endfor%}  {% endfor %}</tr> {% endfor %}
+	</table>
+	
+
+{% else %}
+
+	{% for c in  classes%}
+	
+ 		<a href="/instructeur/presence?{{c}}"> Groupe {{c}}</a> </br>
+	{% endfor %}
+
+{% endif %}
+
+

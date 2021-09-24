@@ -1,0 +1,98 @@
+</br></br></br>
+{% set sumc =[0] %}
+{% set sum= [0] %}
+<button style="float:right;margin-right:10px;height:40px;width:40px;" class="text-muted btn btn-default  icon-btn" title="" data-original-title="Print" onclick="print()" >
+				<svg class="icon icon-sm">
+			<use  style="width:50px;" class="" href="#icon-printer"></use>
+		</svg>
+			</button>
+			
+<div style="width:90%;margin-left:5%;">
+<h2>  Bulletin {{ term }}</h2>
+<table>
+	<tr style="height:30px;" >
+	<th >Matiere </th>
+	<th>Coefficient</th>
+	<th>Oral</th>
+	<th>TP</th>
+	<th>Examen écrit </th>
+	<th>Controle 1</th>
+	<th>Controle 2</th>
+	<th>Synthese</th>
+	<th>Moyenne</th>
+	<th>Rang</th>
+	<th>Somme</th>
+	<th style="width:30%;">Remarques</th>
+	</tr>
+	{% for i in results%}
+	
+		<tr style="height:30px;">
+			<td>{{ i[0] }}</td>
+			<td>{{ i[1] }}</td>
+			{% for k in [2,3,4,5,6,7]%}
+			<td> {% if i[k] != -1 %}{{ i[k] }} {%else%} -.-{% endif %}</td>
+			{%endfor%}
+			
+			<td> {{ i[9] }}</td>
+			<td> {{ i[10] }}</td>
+			<td> {{ '%0.2f'| format(i[9]*i[1] |float) }}</td>
+			{% if sumc.append(sumc.pop(0)+i[1]) %}{% endif %}
+			{% if sum.append(sum.pop(0)+(i[1]*i[9])) %}{% endif %}
+			<td style="width:30%;">   {% if i[8] %} {{ i[8] }} {% endif %} </td>
+			
+		</tr>
+	{% endfor %}
+		<tr>
+			<td> <b> total </b> </td>
+			
+			<td>{{ '%0.2f'| format(sumc[0]) }} </td>
+			<td colspan=8>  </td>
+			
+			<td> {{ '%0.2f'| format(sum[0]) }} </td>
+			<td> </td>
+			
+		</tr>
+		<tr>
+			<td colspan=6>Résultats</td>
+			<td colspan=4>Pénalités</td>
+			<td colspan=2>Présence</td>
+			
+		</tr>
+		<tr>
+			<td colspan=1> Semestre </td>
+			<td colspan=2> Moyenne </td>
+			<td colspan=1> Rang  </td>
+			<td>Prix </td>
+			<td>Pénalités </td>
+			<td>Rattrapage </td>
+			<td>Avertissement </td>
+			<td> Exclusion </td>
+			<td> Conseil </td>
+			<td colspan=2> </td>
+		</tr>
+		
+		
+		{% for l in last %}
+		<tr>
+			<td colspan=1> {{ l[0]}} </td>
+			<td colspan=2> {{l[1]}} </td>
+			<td colspan=1> {{l[2]}}  </td>
+			<td colspan=8> </td>
+		</tr>
+		{% endfor %}
+		
+		
+		
+</table>
+</div>
+<script>
+        function print() {
+            window.open(
+              "/student/printbulletin?{{bulletin}}", "_blank");
+        }
+    </script>
+    
+ 	
+
+
+

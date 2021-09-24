@@ -1,0 +1,23 @@
+</br></br></br>
+<a href='/' style="color:gray;"> ACCEUIL </a> > <a href='/student' style="color:gray;"> ELEVE </a> > <span style="color:gray;"> RESULTATS </span>
+<div class="container1">
+<h1 class="fsPageTitle">Résultats</h1>
+
+{% for i in bulletins %}
+	<div style="background-color:#fff;height:60px;">
+		
+		<span class="titlePub">Bulletin {{i[0]}}</span>
+		<p class="datePub"> <span style="z-index:0;position:relative;"> <img class="lazy" style ="z-index:9;position:relative;"src="http://www.enicarthage.rnu.tn/assets/images/ico.png" alt="calendar"> </span><span style="margin-left:10px;">  Publié le : {{i[4]}}</span></p>
+		<p style="">Moyenne : {{i[-3]}} - Rang: {{i[-2]}} </p> 
+		<a href="bulletin?{{i[3]}}" class="linkPub"><span>Plus de détails</span></a>
+		
+		
+	</div></br></br></br>
+	 
+	 
+	 
+	 
+	 
+{% endfor %}
+</div>
+

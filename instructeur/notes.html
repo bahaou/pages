@@ -1,0 +1,146 @@
+<script type="text/javascript" src="jspdf.debug.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.6/jspdf.plugin.autotable.min.js"></script> 
+</br> </br> </br>
+<div style="width:100%;">
+{% if not group%}
+
+<h2> Groupes</h2> 
+{% for class in classes %}
+<a href="/instructeur/notes?{{class}}">Groupe <span>{{class}}</span> </a> </br>
+{% endfor %}
+
+
+{% else %}
+	{% if not subject%}
+		<a href="/instructeur/notes">  <i class="fa fa-arrow-circle-left" style="font-size:40px;color:gray;"></i></a>
+		 <h2>Groupe  {{ group }} </h2>
+		{% for s in subjects %}
+			<a href="/instructeur/notes?{{group}}?{{s}}"> {{s}} </a> </br>
+		{%endfor %}
+	{% else %}
+		<a href="/instructeur/notes?{{ group }} ">  <i class="fa fa-arrow-circle-left" style="font-size:40px;color:gray;"></i></a>
+		 <h2> Groupe <span id="group">{{ group }}</span> </h2></br>
+		
+			
+		 <button style="float:right;margin:1px;width:80px;height:30px;"class="btn btn-primary btn-sm primary-action" id="save" data-label="Save"  >S<span class="alt-underline">a</span>ve</button>
+		<button style="float:right;margin-right:10px;height:30px;" class="text-muted btn btn-default  icon-btn" title="" data-original-title="Print" onclick="generate()" >
+				<svg class="icon icon-sm" style="">
+			<use class="" href="#icon-printer"></use>
+		</svg>
+			</button>
+		 <button style="float:right;margin:1px;height:30px;margin-right:10px" class="text-muted btn btn-default next-doc icon-btn" title="" data-original-title="Next Document" aria-describedby="tooltip230744">
+				<svg class="icon icon-sm" style="">
+			<use class="" href="#icon-right"></use>
+		</svg>
+			</button>
+			
+		<button style="float:right;margin:1px;height:30px;margin-right:10px"  class="text-muted btn btn-default prev-doc icon-btn" title="" data-original-title="Previous Document" aria-describedby="tooltip24461">
+				<svg class="icon icon-sm" style="">
+			<use class="" href="#icon-left"></use>
+		</svg>
+		
+			</button>
+			
+			
+		
+		
+		
+		<h4> <span id="matiere">{{subject}}</span> </h4>	
+		<table style="border-radius:30px 5%;" id ="simple_table">
+			<tr>
+				<th>Eléve </th>
+				<th>Oral</th>
+				<th>TP</th>
+				<th>Examen écrit</th>
+				<th>Contrôle 1</th>
+				<th>Contrôle 2</th>
+				<th>Synthese</th>
+				<th style="width:30%;">Remarque</th>
+			</tr>
+			{%for n in notes%}
+			<tr>
+				<td> <a href="/app/course-results/{{n[8]}}"> {{ n[9] }}</a> <span style="display:none;" class="studentcode">{{n[8]}}</span>
+				{% set l=[1,2,3,4,5,6] %}
+				{% for i in l%}
+				<td>  <span id="{{n[8]}}--{{i}}"style="display:none;">{% if n[i]!=-1 %} {{n[i]}} {%endif%} </span><input type="text" id="{{n[8]}}-{{i}}" name="{{n[8]}}-{{i}}" {% if n[i]==-1 %} disabled {%else%} value="{{n[i]}}" {% endif %}>  </td>
+				
+				{% endfor %}
+				<td> <span style="display:none;">{{ n[7]}} </span> <input type="text" id="{{n[8]}}-7" name="{{n[8]}}-7" {% if n[5]%}  value="{{n[7]}}"{% endif %}>  </td>
+				
+				
+			
+			</tr>
+			{% endfor %}
+		</table>
+		<p><span id="ins" style="display:none;">{{username}}</span> </p>
+		
+	{% endif %}
+{% endif %}
+</div>
+
+
+
+
+<script>
+	frappe.ready(function() {
+	
+	
+	var m= $("#matiere").text();
+		$('#save').on("click", function() {
+		let codes =[];
+		var correct = true;
+		$(".studentcode").each(function() {
+    		var code = $(this).text();
+    		var notes=[code];
+    		for (i = 1; i <8; i++) {
+  			var a = $("#"+code+"-"+i.toString()).val();
+  			if ( i !=7  && ( a >20 || a<-1 || !isNormalInteger(a) ) && a!='') { correct=false;
+  			frappe.call({
+				 method: "frappe.student.wrongnumber", //dotted path to server method
+				 args:{ 'c':a},
+				callback: function(r) {
+					console.log(r.message);
+				}
+			});return false ;}
+  			
+  			if (a ==''){ a =-1;}
+  			notes.push(a);
+		}
+		
+		codes.push(notes);
+    		  		
+    		
+    	
+});
+
+		if (correct==true){
+			
+			frappe.call({
+				 method: "frappe.student.save_notes", //dotted path to server method
+				 args:{ 'notes':codes, 'subject':m},
+				callback: function(r) {
+					console.log(r.message);
+				}
+			});}
+
+			
+
+		});
+	});
+	
+	
+function isNormalInteger(str) {
+	if ( Number(str)==0) { return true;}
+   if (typeof str != "string") return false // we only process strings!  
+  return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
+         !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
+}
+
+
+
+</script>
+
+
+
+ 

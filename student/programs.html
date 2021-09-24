@@ -1,0 +1,29 @@
+</br> </br> </br>
+<div style="width:90%;margin-left:5%;">
+<h2>Groupe {{groupe}} </h2>
+<h4>{{programme}}</h4>
+<p> Anneé universitaire {{year }} </p>
+{% set coef=[0]%}
+{% set volume=[0]%}
+<table>
+	<tr>
+		<th>Matiere</th>
+		<th> Coefficient</th>
+		<th>Volume horaire</th>
+	</tr>
+	{% for i in program%}
+	{% if coef.append(coef.pop(0)+i[1]| float) %}{% endif %}
+	{% if volume.append(volume.pop(0)+i[2] |float) %}{% endif %}
+		<tr>
+			<td>{{i[0]}}</td>
+			<td>{{i[1]}}</td>
+			<td>{% if i[2] and i[2] !='none' %} {{ '%0.2f'| format(i[2]) }} {% else %} -.- {% endif %} </td>	
+		</tr>
+	{% endfor %}
+	<tr>
+			<td>Total</td>
+			<td>{{coef[0]}}</td>
+			<td>{{ '%0.2f'| format(volume[0]) }}</td>	
+		</tr>
+</table>
+</div>

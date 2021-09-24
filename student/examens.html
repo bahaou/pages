@@ -1,0 +1,104 @@
+<!-- <script type="text/javascript" src="jspdf.debug.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.6/jspdf.plugin.autotable.min.js"></script> 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+<script src="https://unpkg.com/swiper@6.5.0/swiper-bundle.min.js"></script> -->
+
+</br></br></br>
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@1,200&family=Roboto+Mono:ital,wght@1,300&family=Roboto+Slab&family=Signika:wght@300&display=swap" rel="stylesheet">
+
+<a href='/' style="color:gray;"> ACCEUIL </a> > <a href='/student' style="color:gray;"> ELEVE </a> > <span style="color:gray;">EXAMENS</span></br>
+{% set days =["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"]%}
+
+{% if not exam%}
+
+ 
+<div class="container1">
+<h4 class="fsPageTitle"  >Planning des Examens</h4></br>
+
+{% for e in exams%}
+	
+	<a href="/student/examens?{{e[0]}}" style="font-family: 'Roboto Slab', serif;"> Examens {{e[0]}}</a>{%if e[2] > 0 %} <span> dans {{e[2]}} jours. </span> {% endif %} {%if e[3] < 0 %} <span> il y a {{0-e[2]}} jours. </span> {% endif %} {%if e[3] > 0    %} <span> {{e[3]}} jours restants. </span> {% endif %}       </br><p class="datePub"><img class="lazy" src="http://www.enicarthage.rnu.tn/assets/images/ico.png" alt="calendar"><span style="margin-left:10px;">  Publié le : {{e[1]}}</span></p>
+	<hr style="width:50%;">
+{% endfor %}
+</div>
+
+
+{%else%}
+	{{today}}
+	<p style="text-align: center;"> {{ days[start.weekday()]}} {{start.strftime("%d-%m-%Y")}} -> {{days[end.weekday()]}} {{end.strftime("%d-%m-%Y")}} </p>
+	{% set time=[8,9,10,11,12,13,14,15,16,17]%}
+	<table>
+		<tr>
+			<th colspan=60> </th>
+			{%for t in time %}
+				<th colspan=60> <span class="pc"> {{t}}:00-</br>{{t+1}}:00 </span> <span class="mobile" style="display:none"> {{t}}-{{t+1}} </span>  </th>
+			{% endfor %}
+			
+		</tr>
+		{% for i in exams%}
+		{% set hour=[8]%}
+		{% set minute=[0]%}
+		<tr>
+			<td colspan=60 >{{ days[i[0][1].weekday()]}}</br>{{i[0][1]}}</td>
+			{%for j in i%}
+				{% set h1 = j[2].seconds // 3600%}	
+				{% set m1 = (j[2].seconds //60 ) % 60 %}
+				{% set h2 = j[3].seconds // 3600 %}	
+				{% set m2 =(  j[3].seconds //60 ) % 60 %}
+				{% set space = (h1-hour[0]) * 60 + m1 - minute[0]%}
+				{%set duration = (h2 - h1) * 60 + m2 - m1 %}
+				{% if space > 0 %} <!-- put space before the block -->
+					{% set space2=[space]%}
+					{% for i in [1,2,3,4,5,6,7,8,9,10]%}
+						{% if space2[0] > 0 %}
+						{% if 60 - minute[0] <= space2[0]%}
+						<td colspan= {{60-minute[0]}} {%if today == j[1] %} style="background-color:#f5f5f5;" {% endif %} >  </td>
+						{% if space2.append(space2.pop(0)-60+minute[0]) %}{% endif %}
+						{% if  minute.pop(0)%} {% endif %}
+						{% if minute.append(0) %}{% endif %}
+						{% else %}
+						<td colspan= {{space2[0]}} {%if today == j[1] %} style="background-color:#f5f5f5;" {% endif %}> </td>
+						{% if  space2.pop(0)%} {% endif %}
+						{% if space2.append(0) %}{% endif %}
+						{% endif %}
+						{% endif %}
+					{% endfor %}
+				{% endif %}
+			
+				<td colspan = {{duration }}  {%if today == j[1] %} style="background-color:#f5f5f5;" {% endif %} >{{j[0]}}<br>Salle {{j[4]}}</td>
+				{% if hour.pop(0) %}{% endif %}
+				{% if minute.pop(0) %}{% endif %}
+				{% if hour.append(h2) %}{% endif %}
+				{% if minute.append(m2) %}{% endif %}
+				
+			{% endfor %}
+			
+			{% set space2 = [(18-hour[0]) * 60  - minute[0]]%}
+			{% if space2[0] > 0 %} <!-- put space on the rest of teh day  -->
+				{% for o in [1,2,3,4,5,6,7,8,9,10]%}
+					{% if space2[0] > 0 %}
+					{% if 60 - minute[0] <= space2[0]%}
+						<td colspan= {{60-minute[0]}} {%if today == i[0][1] %} style="background-color:#f5f5f5;" {% endif %} > </td>
+						{% if space2.append(space2.pop(0)-60+minute[0]) %}{% endif %}
+						{% if  minute.pop(0)%} {% endif %}
+						{% if minute.append(0) %}{% endif %}
+					{% else %}
+						<td colspan= {{space2[0]}}  {%if today == i[0][1] %} style="background-color:#f5f5f5;" {% endif %} ></td>
+						{% if  space2.pop(0)%} {% endif %}
+						{% if space2.append(0) %}{% endif %}
+					{% endif %}
+					{% endif %}
+				{% endfor %}
+				
+			{% endif %}
+			
+			
+			
+		</tr>
+		{%endfor%}
+	</table>
+{%endif%}

@@ -1,0 +1,78 @@
+h1 {
+    margin-top: 0;
+    font-weight: 900;
+    color: #BD0F34;
+    font-size: 40px;
+    line-height: 56px;
+    margin-bottom: 20px;
+}
+
+table
+{
+    table-layout: fixed;
+    width:100%;
+    border: 1px solid gray;
+}
+
+td
+{
+    border: 1px solid gray;
+   
+    height:80px;
+    min-width:100px;
+   background-color:#fff;
+    text-align: center;
+}
+
+th
+{
+    background-color:#fff;
+    text-align: center;
+}
+.eventname
+{
+    font-size: 1.1em;
+    font-weight: bold;
+    outline: 0;
+    color :red;
+}
+.b
+{
+
+float:right;
+}
+.myButton {
+	box-shadow:inset 0px 1px 0px 0px #f7c5c0;
+	background:linear-gradient(to bottom, #fc8d83 5%, #e4685d 100%);
+	background-color:#fc8d83;
+	border-radius:6px;
+	border:1px solid #d83526;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:19px;
+	font-weight:bold;
+	padding:15px 46px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #b23e35;
+}
+.myButton:hover {
+	background:linear-gradient(to bottom, #e4685d 5%, #fc8d83 100%);
+	background-color:#e4685d;
+}
+.myButton:active {
+	position:relative;
+	top:1px;
+}
+@keyframes blink {50% { color: transparent }}
+.loader__dot { animation: 1s blink infinite }
+.loader__dot:nth-child(2) { animation-delay: 250ms }
+.loader__dot:nth-child(3) { animation-delay: 500ms }
+
+.con {
+     display: flex;
+  justify-content: center;
+  align-items: center;
+}
+

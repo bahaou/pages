@@ -1,0 +1,69 @@
+
+</br>
+{% set today = date[2][:2] | int - date[0][:2] | int %}
+<div >
+<table class="semaine" id = "tab">
+  <tr>
+    <th> </th>
+    <th>Lundi</th>
+    <th>Mardi</th>
+    <th>Mercredi</th>
+    <th>Jeudi</th>
+    <th>Vendredi</th>
+    <th>Samedi</th>
+  </tr>
+  {% set l =[0,0,0,0,0,0] %}
+  {% for c in calendarA %}
+  
+  <tr>
+    <td> {{ c[0] }} <i class="fa fa-angle-right"></i>   {{ c[0] +1 }}</td>
+   
+     {% for i in c[1] %}
+     	{% set number = i[1] %}
+     	
+    	{% if i[0]  %}
+    		{% if i[0]["fromminute"] == i[0]["tominute"] and i[0]["tominute"] == 0 and l[number] ==0 %}
+    		{% set span = i[0]["tohour"]- c[0] %}
+    		
+    		{% set add = l[number] + span -1%}
+    		{% if l.pop(number) %}{% endif %}
+    		{% if l.insert(number,add) %}{% endif %}
+    		
+    		<td rowspan='{{span}}'     {% if number == today %}   style="background-color:#f5f5f5;"  {% endif %} >  
+    		
+    			{% if  number == today and  i[0]["fromhour"] <= now[0] and i[0]["fromminute"] <= now[1]  and  (i[0]["tohour"] > now[0]  or (i[0]["tohour"] == now[0] and i[0]["tominute"] >= now[1] )) %}
+    				<div class="loader" style = "float:right;"><span class="loader__dot" style="color:#fa4e37;font-size: 10px;"><i class="fa fa-circle"></i></span></div>
+    			{% endif %}
+    			
+    					{% if i[5] == 'tp'%}
+    				<span style="float:left;margin-top:0%;">tp</span>
+    					{% elif i[5]== 'cours' %}
+    				<span style="float:left;margin-top:0%;">c</span>
+    					{% else %}
+    					{% endif %}
+    			<div style = "height:100%;" class="con" >
+    				<div style="">
+    					
+    				<span class=eventname > {{ i[2] }}   </Span> </br>
+    			{{ i[3][:-8] }}<br>
+    			 salle {{ i[4] }}
+    			 	</div>
+    			</div>
+    		</td>
+    		{% else %}
+    		{% endif %}
+    	{% elif l[number]> 0 %}
+    		{%  set new = l[number]-1%}
+    		{% if l.pop(number) %}{% endif %}
+    		{% if l.insert(number,new) %}{% endif %}	
+    	{% else %}
+    		<td  {% if number == today %}   style="background-color:#f5f5f5;"  {% endif %}   >  </td>
+    	{% endif %}
+    	
+
+    {% endfor %}
+  </tr>
+  {% endfor %}
+</table>
+</div>
+

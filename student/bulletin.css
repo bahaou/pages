@@ -1,0 +1,34 @@
+table
+{
+    table-layout: fixed;
+    width:100%;
+   border-radius:20px;
+}
+
+td
+{
+    border: 1px solid gray;
+   
+    height:50px;
+    min-width:100px;
+   background-color:#fff;
+    text-align: center;
+    border-radius:20px;
+}
+
+th
+{
+    background-color:#fff;
+    text-align: center;
+     border: 1px solid gray;
+     border-radius:20px;
+}
+
+body
+{
+background-color:#f9fafa;
+}
+
+tr
+{
+border-radius:20px;}

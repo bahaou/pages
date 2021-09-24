@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	{% set sumc =[0] %}
+{% set sum= [0] %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<title>{{namea}}{{t}}</title>
+<style>
+@import url(https://fonts.googleapis.com/earlyaccess/droidarabicnaskh.css);
+@import url(https://fonts.googleapis.com/earlyaccess/lateef.css);
+@import url(http://fonts.googleapis.com/earlyaccess/scheherazade.css); 
+  @page {
+    size: auto;
+    margin: 0;
+    
+  }
+body { font-family:'scheherazade', droidarabicnaskh; line-height:20px; }
+table
+{
+   
+    width:100%;
+   
+}
+
+td
+{
+    border: 1px solid #000;
+  border-bottom: none;
+  border-right: none;
+  
+   
+    height:25px;
+   width:10px;
+   background-color:#fff;
+    text-align: center;
+}
+
+th
+{
+   font-weight: normal;
+    border: 1px solid #000;
+  border-bottom: none;
+  border-right: none;
+ 
+     
+     
+}
+</style>
+</head>
+<body style="">
+
+<div style="text-align:center;position:fixed;font-size:18px;right:20px;max-width: 10in;top:10px;">
+	<p style="margin: 0;;line-height:17px;">الجمهورية التونسية</p>
+	<p style="margin: 0; ;line-height:17px;">وزارة التربية</p>
+	<p style="margin: 0; line-height:17px;">المندوبية الجهوية للتربية : {{cre}}</p>
+	<p style="margin: 0; line-height:17px;">{{institut}}</p>
+</div>
+
+<div style="page-break-after: always;">
+<h1 style="text-align:center;margin-top:20px;"> بطاقة النتائج المدرسية  </h1>
+
+<p  style="float:left;margin: 0; display: inline;" >  السنة الدراسية :{{year}} </p>
+<p  style="float:center;margin-left:36%; display: inline;" >{{t}}</p>
+
+	<table cellspacing=0 style="margin-top:5px; " cellpadding="0" >
+	<tr style="line-height:30px; font-size:18px; ">
+		<td colspan=12 style="border-right:1px solid black;"> 
+			<p style="margin: 0; display: inline;float:left;margin-left:200px;"> ب : {{location}}</p>
+			<p style="margin: 0; display: inline;">تاريخ الولادة : {{birthday}} </p>
+			<p style="float:right;margin-right:10px;margin-top:0;; display: inline;">إسم التلميذ (ة) ولقبه (ها)<span> : {{namea}}</span></p> 
+		</td>
+		
+	</tr>
+	<tr style="line-height:30px; font-size:18px; ">
+		<td colspan=12 style="border-right:1px solid black; border-top:none;"> 
+			<p style="margin: 0; display: inline;float:left;margin-left:30px;"> {{code[8:]}}: رقم التسجيل</p>
+			<p style="margin: 50px;; display: inline;" > عدد التلاميذ :  {{number}}</p>
+			<p style="margin: 0; display: inline;"> العدد الرتبي :  {{ordinal}}</p>
+			<p style="float:right;margin: 0; display: inline;margin-right:10px;"> القسم : {{p}} {{group}}</p>
+		
+		
+		
+		</td>
+	</tr>
+	
+	<tr style="height:30px; font-size:21px; " >
+	<th rowspan=2 style="width:300px;padding:0;" >(ملاحظات الاستاذ (ة) و اسمه (ها) و إمضاءه (ها</th>
+	<th  rowspan=2 >حاصل </th>
+	<th  rowspan=2  style="width:5px;padding:0px;" ><span style="margin:0;">رتبة</span></th>
+	<th  rowspan=2 >معدل</br>ثلاثي</th>
+	<th  rowspan=2 >فرظ</br>تأليفي</th>
+	<th    colspan=2>فروض مراقبة</th>
+	
+	<th  rowspan=2  >إختبار</br>كتابي</th>
+	<th  rowspan=2 >أشغال</br>تطبيقية</th>
+	<th  rowspan=2 >شفاهي </th>
+	<th  rowspan=2 >ظارب</th>
+	<th  rowspan=2  style="border-right:1px solid black;width:120px;" >مواد   </th>
+	</tr>
+	<tr> 
+	<th>ف.م.2</th>
+	<th>ف.م.1</th>
+	</tr>
+	{% for i in results%}
+	
+		<tr style="height:30px;font-size:23px;padding:0;">
+			<td >  <span style="float:left;margin-left:25px;">{{i[11]}}</span> {% if i[8] %} {{ i[8] }} {% endif %} </td>
+			<td> {{ '%0.2f'| format(i[9]*i[1] |float) }}</td>
+			<td style="width:5px;" > {{i[10]}}</td>
+			<td> {{ i[9] }}</td>
+			{% for k in [7,6,5,4,3,2]%}
+			<td style="width:10px;"> {% if i[k] != -1 %}{{ i[k] }} {%else%} -.-{% endif %}</td>
+			{%endfor%}
+			<td>{{ i[1] }}</td>
+			<td style="border-right:1px solid black;">{{ i[0] }}</td>
+			
+			
+			
+			
+			
+			
+			{% if sumc.append(sumc.pop(0)+i[1]) %}{% endif %}
+			{% if sum.append(sum.pop(0)+(i[1]*i[9])) %}{% endif %}
+			
+			
+		</tr>
+	{% endfor %}
+		<tr style="height:30px;font-size:23px;padding:0;">
+			<td colspan = 1> </td>
+			
+			<td> {{ '%0.2f'| format(sum[0]) }} </td>
+			<td colspan=8>  </td>
+			<td> {{ '%0.2f'| format(sumc[0]) }} </td>
+			<td style="border-right:1px solid black;" > المجموع  </td>
+			
+		</tr>
+		<tr style="height:30px;font-size:23px;padding:0;">
+			<td>رمز السيرة والمواظبة : 1</td>
+			<td colspan=2>المواظبة</td>
+			<td colspan=4>العقوبات</td>
+			<td colspan=5 style="border-right:1px solid black;">النتائج</td>
+			
+		</tr>
+		<tr style="height:30px;font-size:22px;padding:0;">
+		{% set s = (last|length)*2 +2 %}
+			<td rowspan={{s}} style="border-bottom:1px solid black;vertical-align: top; padding:10px;"> <span style="float:right;">:(قرار مجلس القسم و ملاحظات المدير (ة     </span> </br>{% for u in last%}</br>{% endfor %} <span style="float:right;bottom: 0;"> : (المدير (ة</span>  <span style="float:right;bottom: 0;margin-right:20px;">{{directeur}}</span></td>
+			<td >تأخير</td>
+			<td >غياب</td>
+			<td>مجلس</td>
+			<td>طرد</td>
+			<td>إنذار</td>
+			<td>مذاكرة</td>
+			<td>العقوبات</td>
+			<td>الجوائز</td>
+			<td>الرتبة</td>
+			<td>المعدل</td>
+			<td style="border-right:1px solid black;">الفترة</td>
+		</tr>
+		{% for i in last %}
+		<tr>
+			<td ></td>
+			<td ></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td>{{i[2]}}</td>
+			<td>{{i[1]}}</td>
+			<td style="border-right:1px solid black;">{{i[0]}}</td>
+		<tr>
+		{% endfor%}
+		<tr>
+			<td colspan=11 style="border-right:1px solid black;border-bottom:1px solid black;height:5px;">
+			<span style="float:right;">ملاحظة :</span>
+			</td>
+		</tr>
+		
+		
+		
+</table>
+</div>
+
+
+
+
+
+
+</body>
+</html>
+
+<script>
+
+window.print();
+
+// close the window after print
+//NOTE: doesn't close if print is cancelled in Chrome
+setTimeout(function() {
+	window.close();
+}, 1000);
+</script>
+
+
+

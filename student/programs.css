@@ -1,0 +1,36 @@
+table
+{
+    table-layout: fixed;
+    width:100%;
+    border: 2px solid #d9d9d9;
+    min-width:300px;
+    
+}
+
+td
+{
+    border: 2px solid #d9d9d9;
+   
+    height:50px;
+   
+   background-color:#fff;
+    text-align: center;
+}
+
+th
+{
+    background-color:#fff;
+    text-align: center;
+    
+}
+
+p
+{
+display:inline;
+float : right;
+}
+h4
+{
+display:inline;
+
+}

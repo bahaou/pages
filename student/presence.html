@@ -1,0 +1,255 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</br></br></br>
+<script>
+window.onload = function() {
+
+
+
+}
+
+$(document).ready(function(){
+    
+    var chart = new CanvasJS.Chart("chartContainer", {
+	animationEnabled: true,
+	title: {
+		text: " "
+	},
+	data: [{
+		type: "pie",
+		startAngle: 240,
+		
+		indexLabel: "{label} {y}",
+		dataPoints: [
+			{y: {{present | int}}, label: "Present", color:"#37ba25"},
+			{y: {{absent | int}}, label: "Absent",color:"#f59300"},
+			{y: {{exclu | int }}, label: "Exclu",color:"#d42f2f"},
+			
+		]
+	}]
+});
+
+chart.render();
+
+function chart2(type){
+
+if(type=="total"){
+		var d=[
+		{% for i in att %}
+			{ label: "{{i[0]}}",  y: {{i[1]}}},
+		{%endfor%}
+		];
+		var d2=[
+		{% for i in att %}
+			{ label: "{{i[0]}}",  y: {{i[2]}}},
+		{%endfor%}
+		]
+		
+}	
+
+if(type=="term"){
+		var d=[
+		{% for i in attterm %}
+			{ label: "{{i[0]}}",  y: {{i[1]}}},
+		{%endfor%}
+		];
+		var d2=[
+		{% for i in attterm %}
+			{ label: "{{i[0]}}",  y: {{i[2]}}},
+		{%endfor%}
+		]
+		
+}
+
+
+var chart = new CanvasJS.Chart("chartContainer2", {
+	exportEnabled: true,
+	animationEnabled: true,
+	title:{
+		text: "Présence"
+	},
+	subtitles: [{
+		text: "Cliquez sur Légende pour masquer ou afficher la série de données "
+	}], 
+	axisX: {
+		title: "Matiéres"
+	},
+	axisY: {
+		title: "Present",
+		titleFontColor: "#37ba25",
+		lineColor: "#37ba25",
+		labelFontColor: "#37ba25",
+		tickColor: "#37ba25",
+		includeZero: true
+	},
+	axisY2: {
+		title: "Absent",
+		titleFontColor: "#f59300",
+		lineColor: "#f59300",
+		labelFontColor: "#f59300",
+		tickColor: "#f59300",
+		includeZero: true
+	},
+	axisY3: {
+		title: "Absent",
+		titleFontColor: "#C0504E",
+		lineColor: "#C0504E",
+		labelFontColor: "#C0504E",
+		tickColor: "#C0504E",
+		includeZero: true
+	},
+	toolTip: {
+		shared: true
+	},
+	legend: {
+		cursor: "pointer",
+		itemclick: toggleDataSeries
+	},
+	data: [{
+		type: "column",
+		name: "Present",
+		color:"#37ba25",
+		showInLegend: true,      
+		yValueFormatString: "#,##0.# Units",
+		
+		dataPoints: d
+		
+		
+		
+	},
+	{
+		type: "column",
+		name: "Absent",
+		color:"#f59300",
+		axisYType: "secondary",
+		showInLegend: true,
+		yValueFormatString: "#,##0.# Units",
+		dataPoints: d2
+	},
+	{
+		type: "column",
+		name: "Exclu",
+		color: "#d42f2f",
+		axisYType: "secondary",
+		showInLegend: true,
+		yValueFormatString: "#,##0.# Units",
+		dataPoints: [
+			{% for i in att %}
+			{ label: "{{i[0]}}",  y: {{i[3]}} },
+		{%endfor%}
+		]
+	}
+	
+	]
+});
+chart.render();
+
+function toggleDataSeries(e) {
+	if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+		e.dataSeries.visible = false;
+	} else {
+		e.dataSeries.visible = true;
+	}
+	e.chart.render();
+}
+}
+
+chart2("total");
+    
+    $("#term").click(function(){
+    	$('#presence').text("{{presentt}}");
+    	$('#absent').text("{{absentt}}");
+    	$('#exclu').text("{{exclut}}");
+    	var chart = new CanvasJS.Chart("chartContainer", {
+	animationEnabled: true,
+	title: {
+		text: " "
+	},
+	data: [{
+		type: "pie",
+		startAngle: 240,
+		
+		indexLabel: "{label} {y}",
+		dataPoints: [
+			{y: {{presentt | int}}, label: "Present", color:"#37ba25"},
+			{y: {{absentt | int}}, label: "Absent",color:"#f59300"},
+			{y: {{exclut | int }}, label: "Exclu",color:"#d42f2f"},
+			
+		]
+	}]
+});
+
+chart.render();
+chart2("term");
+    	
+    	 });
+    	 
+    	 $("#total").click(function(){
+    	$('#presence').text("{{present}}");
+    	$('#absent').text("{{absent}}");
+    	$('#exclu').text("{{exclu}}");
+    	var chart = new CanvasJS.Chart("chartContainer", {
+	animationEnabled: true,
+	title: {
+		text: " "
+	},
+	data: [{
+		type: "pie",
+		startAngle: 240,
+		
+		indexLabel: "{label} {y}",
+		dataPoints: [
+			{y: {{present | int}}, label: "Present", color:"#37ba25"},
+			{y: {{absent | int}}, label: "Absent",color:"#f59300"},
+			{y: {{exclu | int }}, label: "Exclu",color:"#d42f2f"},
+			
+		]
+	}]
+});
+
+chart.render();
+chart2("total");
+    	
+    	 });
+    	 
+    	 
+    	 
+    	 
+    
+    
+    
+    
+    
+});
+    
+
+    
+</script>
+<script  src="test2.js"> </script>
+
+<h3> {{name}} <h3>
+
+
+<button type="button" id="term" class="btn btn-light">{{term}}</button>
+<button type="button" id="year" class="btn btn-light">{{year}}</button>
+<button type="button" id="total" class="btn btn-light">Total</button>
+</br></br>
+
+<div>
+<div id="di" style="width:47%;border: 5px groove rgba(53,185,232,0.43);border-radius: 25px;text-align:center;overflow: auto;display: inline-block; "> 
+<div id="chartContainer" style="height: 300px; width: 100%;border-radius: 55px;"></div> </div>
+<div id ="desc" style="width:50%;border: 5px groove rgba(53,185,232,0.43);border-radius: 25px;overflow: auto;float:right; "> </br>
+	 <h3>Presence : <span  id="presence">{{present}}</span></h3> </br>
+	<h3 >Absent : <span id="absent" >{{absent}}</span></h3> </br>
+	<h3 >Exclu : <span id="exclu">{{exclu}}</span> </h3></br>
+
+
+
+</div> </br>
+</div>
+
+<div style="border: 5px groove rgba(53,185,232,0.43);border-radius: 25px;text-align:center;overflow: auto;"> 
+<div id="chartContainer2" style="height: 370px; width: 100%;"></div>
+</div>
+
+
+

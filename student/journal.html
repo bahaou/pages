@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	{% set sumc =[0] %}
+{% set sum= [0] %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<title>{{namea}}{{t}}</title>
+<style>
+@import url(https://fonts.googleapis.com/earlyaccess/droidarabicnaskh.css);
+@import url(https://fonts.googleapis.com/earlyaccess/lateef.css);
+@import url(http://fonts.googleapis.com/earlyaccess/scheherazade.css); 
+  @page {
+    size: auto;
+    margin: 0;
+    
+  }
+body { font-family:'scheherazade', droidarabicnaskh; line-height:20px; }
+table
+{
+   
+    width:100%;
+   
+}
+
+td
+{
+    border: 1px solid #000;
+  border-bottom: none;
+  border-right: none;
+  
+   
+    height:25px;
+   
+   background-color:#fff;
+    text-align: center;
+}
+
+th
+{
+   font-weight: normal;
+    border: 1px solid #000;
+  border-bottom: none;
+  border-right: none;
+ 
+     
+     
+}
+p{
+line-height:5px;}
+
+
+.cheader td{
+border:none;
+height:5px;
+
+}
+.cheader tr {
+height:5px;
+}
+.bordless th {
+border:none;
+}
+.bordless td {
+border:none;
+height:30px;
+}
+
+
+.this td 
+{ height:30px;
+}
+
+</style>
+</head>
+<body style="">
+<div style="text-align:center;position:fixed;font-size:18px;right:20px;max-width: 10in;">
+	<p style="margin: 0;;line-height:20px;">الجمهورية التونسية</p>
+	<p style="margin: 0; ;line-height:20px;">وزارة التربية</p>
+	<p style="margin: 0; line-height:20px;">المندوبية الجهوية للتربية : {{cre}}</p>
+</div>
+</br>
+<p  style="position:fixed;left:20px;top:20px;" >  السنة الدراسية : <b>{{year}}</b> </p>
+
+<h1 style="text-align:center;margin-top:20px;"> الدفتر المدرسي </h1>
+
+
+<table class="cheader"style="width:100%;border:none;height:10px;">
+	<tr>
+	 <td > <p style="float:left;margin-left:30px;"> <b>{{code[8:]}}</b>: رقم التسجيل</p> </td>
+	 <td > <p style="margin: 0;float:left;margin-left:200px;"> مكانها  : {{location}}</p> </td>
+	 <td><p >تاريخ الولادة : {{birthday}} </p> </td>
+	 <td><p style="float:right;margin-right:10px;"><b>الإسم واللقب : </b><span> : {{namea}}</span></p>  </br> </td>
+	</tr>
+	<tr>
+	<td></td>
+	<td> <p style="" > عدد التلاميذ :  {{number}}</p> </td>
+	<td> <p style=""> العدد الرتبي :  {{ordinal}}</p>  </td>
+	<td>  <p style="float:right;margin-right:10px;"> <b>القسم</b> : {{p}} {{group}}</p> </td>
+	</tr>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table style="width:50%;float:right;" cellspacing=0 cellpadding=0>
+	<tr>
+		<th colspan=2><b> السنوي</b></th>
+		{% for i in journal %}
+		<th colspan=2>{{i[0]}}</th>
+		{%endfor%}
+		<th rowspan=2  style="border-right:1px solid #000;" > مواد </th>
+		
+	</tr>
+	<tr>
+	<td> الرتبة </td>
+	<td style="border-right:1px solid #000;"> المعدل </td>
+	{% for i in journal %}
+		<td> الرتبة </td>
+		<td> المعدل </td>
+	{%endfor%}
+	
+	
+	</tr>
+	{% set termsnumber = journal |length%}
+	{% set subjects = journal[0][2]|length%}
+	{% for j in range(subjects) %}
+		<tr>
+		<td  {% if j==subjects-1 %} style="border-bottom:1px solid #000;" {%endif%}></td>
+		<td  {% if j==subjects-1 %} style="border-bottom:1px solid #000;" {%endif%}></td>
+		{% for t in range(termsnumber)%}
+		<td  {% if j==subjects-1 %} style="border-bottom:1px solid #000;" {%endif%}> {{ journal[t][2][j][2] }}</td>
+		<td  {% if j==subjects-1 %} style="border-bottom:1px solid #000;" {%endif%}>  {{ journal[t][2][j][1] }} </td>
+		{%endfor%}
+		<td style="border-right:1px solid #000; {% if j==subjects-1%}border-bottom:1px solid #000; {%endif%}"> {{ journal[0][2][j][0]}} </td>
+		
+		
+		</tr>
+	{% endfor %}
+
+</table>
+</br></br></br></br></br></br></br></br></br></br></br>
+
+
+<table cellspacing=0 cellpadding=0 class="this"> 
+	<tr >
+		<th> رمز السيرة والمواظبة : 1 </th> 
+		<th> <span style="float:right;">:(قرار مجلس القسم و ملاحظات المدير (ة     </span>  </th>
+		<th rowspan={{last|length }} style="border-right:none;border-bottom:1px solid #000;"> 
+		<table class="bordless" cellspacing=0 cellpadding=0>
+		<tr>
+			<th> الجوائز</th>
+			<th> الرتبة  </th>
+			<th> المعدل السنوي </th>
+		</tr>
+		<tr>
+			<th> </th>
+			<th> {{last[-1][2]}}   </th>
+			<th> {{last[-1][1]}}   </th>
+		</tr>
+		<tr>
+			<th> </th>
+			<th> {{number}}  </th>
+			<th>  التلاميذ </th>
+		</tr>
+		
+		
+		</table>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		 </th>
+		
+		
+		
+		
+		
+		<th rowspan={{last|length }} style="border-right:1px solid #000;border-bottom:1px solid #000;">
+		<table style=" border:none;" cellspacing=0 cellpadding=0>
+			<tr>
+			<th style="border-top:none;border-left:none;"> الجوائز والعقوبات  </th>
+			<th style="border-top:none;"> الرتبة</th>
+			<th style="border-top:none;">المعدل   </th>
+			<th style="border-top:none;"> فترة الإمتحان </th>
+			</tr>
+			{% for i in range(last|length -1) %}
+				<tr>
+				<td style="border-left:none;"> </td>
+				<td> {{ last[i][2] }}</td>
+				<td> {{last[i][1]  }}</td>
+				<td> {{last[i][0]}} </td>
+				</tr>
+			{%endfor%}
+			
+		</table>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		 </th> 
+		
+	</tr>
+	
+	<tr>
+	<td  rowspan={{(last|length)-1 }} style="border-bottom:1px solid #000;"> </td>
+	<td  rowspan={{(last|length)-1 }}  style="border-bottom:1px solid #000;vertical-align: bottom;">  <span style="float:right;margin-bottom: 10px;margin-right:10px;"> : (المدير (ة</span>  <span style="float:right;bottom: 0;margin-right:20px;">{{directeur}}</span</td>
+	
+	
+	</tr>
+	
+	
+	
+	
+
+
+
+</table>
+
+
+
+	
+</div>
+
+
+
+
+
+
+</body>
+</html>
+
+<script>
+
+window.print();
+
+// close the window after print
+//NOTE: doesn't close if print is cancelled in Chrome
+setTimeout(function() {
+	window.close();
+}, 1000);
+</script>
+
+
+

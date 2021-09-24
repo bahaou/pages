@@ -1,0 +1,191 @@
+.event {
+  
+
+ 
+  background-size: 20px 20px;
+  margin-right:10px;
+}
+body
+{
+background-color:#f9fafa;
+}
+.container
+{
+width:100%;
+}
+
+.container19 {
+    padding:20px;
+}
+
+
+.emploi{
+display:inline;
+float:right;
+width:74%;
+background-color:red;
+}
+.side{
+
+height:800px;
+width:16%;
+float:left;
+display:inline;
+padding:10px;
+}
+
+h1 {
+    margin-top: 0;
+    font-weight: 900;
+    color: #BD0F34;
+    font-size: 40px;
+    line-height: 56px;
+    margin-bottom: 20px;
+}
+.mobile{
+display:none;
+cursor: pointer;
+}
+.pc{
+display:none;
+}
+table
+{
+    table-layout: fixed;
+    width:80%;
+   
+    min-width:300px;
+    border-spacing: 0;
+    border-collapse: collapse;
+    border-style: hidden;
+
+}
+.wrapper {
+  overflow: auto;
+  border-radius: 6px;
+  border: 1.5px solid gray;
+}
+td
+{
+    border: 2px solid #d9d9d9;
+   
+    height:70px;
+   
+   background-color:#fff;
+    text-align: center;
+}
+
+th
+{
+     border: 2px solid #d9d9d9;
+    background-color:#fff;
+    text-align: center;
+    
+}
+ #myBtn {
+  display: none; /* Hidden by default */
+  position: fixed; /* Fixed/sticky position */
+  bottom: 20px; /* Place the button at the bottom of the page */
+  right: 30px; /* Place the button 30px from the right */
+  z-index: 99; /* Make sure it does not overlap */
+  border: none; /* Remove borders */
+  outline: none; /* Remove outline */
+  background-color: #4d75b3; /* Set a background color */
+  color: white; /* Text color */
+  cursor: pointer; /* Add a mouse pointer on hover */
+  padding: 15px; /* Some padding */
+  border-radius: 10px; /* Rounded corners */
+  font-size: 18px; /* Increase font size */
+}
+
+#myBtn:hover {
+  background-color: #555; /* Add a dark-grey background on hover */
+}
+.eventname
+{
+    font-size: 1.1em;
+    font-weight: bold;
+    outline: 0;
+    color :#e65327;
+}
+.b
+{
+
+float:right;
+}
+.bordered {
+    border: solid #ccc 1px;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+    -webkit-box-shadow: 0 1px 1px #ccc;
+    -moz-box-shadow: 0 1px 1px #ccc;
+    box-shadow: 0 1px 1px #ccc;
+}
+
+
+.myButton {
+	box-shadow:inset 0px 1px 0px 0px #f7c5c0;
+	background:linear-gradient(to bottom, #fc8d83 5%, #e4685d 100%);
+	background-color:#fc8d83;
+	border-radius:6px;
+	border:1px solid #d83526;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:19px;
+	font-weight:bold;
+	padding:15px 46px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #b23e35;
+}
+.myButton:hover {
+	background:linear-gradient(to bottom, #e4685d 5%, #fc8d83 100%);
+	background-color:#e4685d;
+}
+.myButton:active {
+	position:relative;
+	top:1px;
+}
+@keyframes blink {50% { color: transparent }}
+.loader__dot { animation: 1s blink infinite }
+.loader__dot:nth-child(2) { animation-delay: 250ms }
+.loader__dot:nth-child(3) { animation-delay: 500ms }
+
+.con {
+     display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+ .swiper-container {
+      width: 100%;
+      height: 100%;
+     margin-top:10px;
+    }
+
+    .swiper-slide {
+      text-align: center;
+      font-size: 18px;
+      background: #fff;
+
+      /* Center slide text vertically */
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-box-pack: center;
+      -ms-flex-pack: center;
+      -webkit-justify-content: center;
+      justify-content: center;
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      -webkit-align-items: center;
+      align-items: center;
+    }
+    
+
+}
+
+
